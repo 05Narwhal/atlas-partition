@@ -6,6 +6,7 @@ rust-version = "1.88"
 license = "MIT OR Apache-2.0"
 description = "Read GPT, MBR and Apple Partition Map partition tables, with damage reported instead of hidden."
 repository = "https://github.com/05Narwhal/atlas-partition"
+homepage = "https://julianloy.com"
 readme = "README.md"
 keywords = ["partition", "gpt", "mbr", "apm", "parser"]
 categories = ["filesystem", "parser-implementations"]
