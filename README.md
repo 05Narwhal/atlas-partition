@@ -1,6 +1,6 @@
 # atlas-partition
 
-<!-- badges -->[![crates.io](https://img.shields.io/crates/v/atlas-partition.svg)](https://crates.io/crates/atlas-partition) [![docs.rs](https://img.shields.io/docsrs/atlas-partition)](https://docs.rs/atlas-partition) [![CI](https://github.com/05Narwhal/atlas-partition/actions/workflows/ci.yml/badge.svg)](https://github.com/05Narwhal/atlas-partition/actions/workflows/ci.yml) ![License](https://img.shields.io/crates/l/atlas-partition.svg)
+[![crates.io](https://img.shields.io/crates/v/atlas-partition.svg)](https://crates.io/crates/atlas-partition) [![docs.rs](https://img.shields.io/docsrs/atlas-partition)](https://docs.rs/atlas-partition) [![CI](https://github.com/05Narwhal/atlas-partition/actions/workflows/ci.yml/badge.svg)](https://github.com/05Narwhal/atlas-partition/actions/workflows/ci.yml) ![License](https://img.shields.io/crates/l/atlas-partition.svg)
 
 Reads the three partition tables a disk can carry: GPT (with the backup header as a fallback), MBR (with extended partitions and protective-MBR detection) and the Apple Partition Map. Each partition comes back as a slice of the disk's `BlockSource`, with a type hint, and damage the reader could work around is listed in `PartitionMap::damage`.
 
