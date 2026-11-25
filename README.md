@@ -12,7 +12,7 @@ Reads the three partition tables a disk can carry: GPT (with the backup header a
 
 ```toml
 [dependencies]
-atlas-partition = "0.1"
+atlas-partition = "26.0.1-a"
 ```
 
 Minimum supported Rust version: 1.88.
