@@ -17,7 +17,7 @@ authors = ["Julian A. Loy"]
 test-util = []
 
 [dependencies]
-atlas-fs-core = { version = "0.1", path = "X:/Documents/Coding/Projects/Libraries/Rust/atlas-fs-core" }
+atlas-fs-core = { version = "0.1", path = "../atlas-fs-core" }
 
 [lints.rust]
 unsafe_code = "forbid"
