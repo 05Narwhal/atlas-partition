@@ -1,12 +1,12 @@
 [package]
 name = "atlas-partition"
-version = "26.0.1-a"
+version = "26.0.2-a"
 edition = "2024"
 rust-version = "1.88"
 license = "MIT OR Apache-2.0"
 description = "Read GPT, MBR and Apple Partition Map partition tables, with damage reported instead of hidden."
 repository = "https://github.com/05Narwhal/atlas-partition"
-homepage = "https://julianloy.com"
+documentation = "https://disk-atlas.julianloy.com/docs"
 readme = "README.md"
 keywords = ["partition", "gpt", "mbr", "apm", "parser"]
 categories = ["filesystem", "parser-implementations"]
@@ -17,7 +17,7 @@ authors = ["Julian A. Loy"]
 test-util = []
 
 [dependencies]
-atlas-fs-core = { version = "26.0.1-a", path = "../atlas-fs-core" }
+atlas-fs-core = { version = "26.0.2-a", path = "../atlas-fs-core" }
 
 [lints.rust]
 unsafe_code = "forbid"
