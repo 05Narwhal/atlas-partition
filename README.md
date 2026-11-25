@@ -2,11 +2,56 @@
 
 [![crates.io](https://img.shields.io/crates/v/atlas-partition.svg)](https://crates.io/crates/atlas-partition) [![docs.rs](https://img.shields.io/docsrs/atlas-partition)](https://docs.rs/atlas-partition) [![CI](https://github.com/05Narwhal/atlas-partition/actions/workflows/ci.yml/badge.svg)](https://github.com/05Narwhal/atlas-partition/actions/workflows/ci.yml) ![License](https://img.shields.io/crates/l/atlas-partition.svg)
 
-Reads the three partition tables a disk can carry: GPT (with the backup header as a fallback), MBR (with extended partitions and protective-MBR detection) and the Apple Partition Map. Each partition comes back as a slice of the disk's `BlockSource`, with a type hint, and damage the reader could work around is listed in `PartitionMap::damage`.
+**Read GPT, MBR and Apple Partition Map partition tables, and learn what is damaged instead of guessing.**
 
-- GPT, MBR (primary and extended) and APM readers behind one `read(source)` call.
-- Partitions come back as bounded `Slice`s of the underlying `BlockSource`.
-- No `unsafe`. Every length, offset and count read from the disk is checked; damage is an error, not a panic.
+A disk can describe its partitions in three common ways. `atlas-partition` reads all of them behind one call, `read(source)`, and returns each partition as a bounded slice of the disk's `BlockSource` together with a type hint, ready to hand to a filesystem reader.
+
+## Features
+
+- **GPT**, with a fallback to the backup header when the primary is damaged.
+- **MBR**, including extended partitions and protective-MBR detection.
+- **Apple Partition Map (APM)**.
+- **Damage is reported, not hidden.** Anything the reader could work around is listed in `PartitionMap::damage` (for example a bad primary GPT header with a good backup, or an entry that points past the end of the disk), and the rest of the map is still returned.
+- Partitions are `Slice`s of the underlying source, so a filesystem reader can mount one without copying anything.
+- `Scheme`, `PartitionType`, `TypeHint` and `Guid` describe what was found.
+
+## Quick start
+
+```rust,no_run
+use std::path::Path;
+
+use atlas_fs_core::io::file::FileSource;
+
+let source = FileSource::open(Path::new("disk.img"))?;
+if let Some(map) = atlas_partition::read(&source)? {
+    for partition in &map.partitions {
+        println!("{} at {} for {} bytes", partition.number, partition.start, partition.len);
+    }
+}
+```
+
+## Result semantics
+
+Every reader has the same shape, `read(source) -> Result<Option<PartitionMap>>`:
+
+| Result | Meaning |
+|---|---|
+| `Ok(None)` | The map's signature is not there. |
+| `Ok(Some(map))` | A map was read; check `map.damage` for anything that was worked around. |
+| `Err(_)` | The signature is there but the map is damaged beyond use. |
+
+The `gpt`, `mbr` and `apm` modules expose each reader separately when you already know the scheme.
+
+## Safety and robustness
+
+- **No `unsafe`.** The crate is `#![forbid(unsafe_code)]`.
+- **On-disk bytes are hostile.** Every length, offset and count read from a disk is validated before use. Damage is returned as an error, never a panic, an unchecked index or an unbounded loop.
+- **Lints enforce it.** Clippy's `indexing_slicing`, `arithmetic_side_effects`, `unwrap_used`, `expect_used` and `panic` lints are on for the library code.
+- **Read-only.** Nothing in this crate writes to a disk or image.
+
+## Feature flags
+
+- `test-util`: exposes the synthetic test image builders and fuzz seed inputs this crate's own tests use, for tests of crates built on it. It is not part of the stable API.
 
 ## Install
 
@@ -15,7 +60,9 @@ Reads the three partition tables a disk can carry: GPT (with the backup header a
 atlas-partition = "26.0.1-a"
 ```
 
-Minimum supported Rust version: 1.88.
+Versions follow `26.MAJOR.MINOR-STAGE`: the year, the major and minor version, and a stage letter (`a` alpha, `b` beta, `s` stable). Cargo treats a stage suffix as a pre-release, so name the version exactly as above.
+
+Minimum supported Rust version: 1.88 (edition 2024).
 
 ## Licence
 
